@@ -18,6 +18,7 @@ import es from 'event-stream';
 
 const log = util.log;
 const env = process.env.NODE_ENV;
+const debug = env !== 'production';
 const PORT = process.env.PORT || 7777;
 const BUILD_DIR = 'build';
 const PUBLIC_HTML_DIR = 'public_html';
@@ -28,7 +29,8 @@ function copyStatic(sourceDir, destDir) {
 }
 
 function devServer() {
-  const devServerInjection = `webpack-dev-server/client?http://localhost:${PORT}`;
+  // const devServerInjection = `webpack-dev-server/client?http://localhost:${PORT}`;
+  const devServerInjection = `webpack-dev-server/client?http://snake-richardmarks1.c9users.io:8080`;
   webpackConfig.entry.unshift(devServerInjection);
   const compiler = webpack(webpackConfig);
   const options = {
@@ -57,7 +59,7 @@ function buildStaticDeployablePackage(cb) {
 }
 
 task('dist:clean', cb => rimraf(DIST_DIR, cb));
-task('dist:static', () => copyStatic([`${PUBLIC_HTML_DIR}/**/*`], DIST_DIR));
+task('dist:static', () => copyStatic([`${PUBLIC_HTML_DIR}/**/*`], debug ? BUILD_DIR : DIST_DIR));
 task('dist:build', ['dist:static'], cb => buildStaticDeployablePackage(cb));
 task('serve:static', () => copyStatic([`${PUBLIC_HTML_DIR}/**/*`], BUILD_DIR));
 task('serve:watch', () => watch(`${PUBLIC_HTML_DIR}/**`, ['serve:static']));

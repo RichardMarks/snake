@@ -1,12 +1,14 @@
 class Keyboard {
-  constructor({ blacklist }) {
+  constructor({
+    blacklist
+  }) {
     this._state = {
       mods: {
-      	alt: false,
-      	shift: false,
-     	 	ctrl: false,
+        alt: false,
+        shift: false,
+        ctrl: false,
       },
-      keysDown: { },
+      keysDown: {},
     };
     this._blacklist = blacklist;
   }
@@ -32,38 +34,62 @@ class Keyboard {
         ctrl: keyEvent.ctrlKey,
       });
     };
-    
+
     window.addEventListener('keydown', onKeyDown, false);
     window.addEventListener('keyup', onKeyUp, false);
   }
 
-  get state() { return this._state; }
-  
-  isDown(key) { return this._state.keysDown[key]; }
+  get state() {
+    return this._state;
+  }
+
+  isDown(key) {
+    return this._state.keysDown[key];
+  }
 
   _updateState(nextState) {
     const state = this._state;
     Object.keys(state.mods).forEach(mod => (state.mods[mod] = nextState[mod]));
-    state.keysDown[nextState.key] = nextState.down;  
+    state.keysDown[nextState.key] = nextState.down;
   }
 }
 
-const keyboard = new Keyboard({ });
+
 const KEY_UP = 'ArrowUp';
 const KEY_DOWN = 'ArrowDown';
 const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';
 const KEY_ENTER = 'Enter';
 
+const keyboard = new Keyboard({
+  blacklist: [
+    KEY_UP,
+    KEY_DOWN,
+    KEY_LEFT,
+    KEY_RIGHT,
+  ],
+});
+
 const controller = {
-  get left() { return keyboard.isDown(KEY_LEFT); },
-  get right() { return keyboard.isDown(KEY_RIGHT); },
-  get up() { return keyboard.isDown(KEY_UP); },
-  get down() { return keyboard.isDown(KEY_DOWN); },
-  get start() { return keyboard.isDown(KEY_ENTER); },
+  init() { keyboard.init(); },
+  get left() {
+    return keyboard.isDown(KEY_LEFT);
+  },
+  get right() {
+    return keyboard.isDown(KEY_RIGHT);
+  },
+  get up() {
+    return keyboard.isDown(KEY_UP);
+  },
+  get down() {
+    return keyboard.isDown(KEY_DOWN);
+  },
+  get start() {
+    return keyboard.isDown(KEY_ENTER);
+  },
 };
 
 export {
   keyboard,
   controller,
-}
+};

@@ -1,7 +1,7 @@
-import { Snake } from './Snake';
+import { Game } from './Snake';
 
 function boot() {
-  const game = new Snake();
+  const game = new Game();
   game.loadHighScore && game.loadHighScore();
   game.init && game.init();
 }
